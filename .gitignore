@@ -1,0 +1,48 @@
+# Visual Studio
+Release
+bin
+obj
+*.ncb
+*.vcproj*
+*.suo
+*.user
+*.sln.cache
+*.manifest
+*.CodeAnalysisLog.xml
+*.lastcodeanalysissucceeded
+
+# binaries
+/*.exe
+/*.dll
+/*.dll.config
+/*.so
+/*.dylib
+/*.pdb
+/*.mdb
+*.mmdb.gz
+
+# StyleCop
+StyleCopViolations.xml
+
+# backup files by various editors
+*~
+*.orig
+\#*
+.*.sw?
+
+# Monodevelop
+*.pidb
+*.userprefs
+
+# Mac OS X
+.DS_Store
+
+# XCode
+temp.c
+temp.o
+temp.s
+*.resources
+
+# SublimeText
+*.sublime-project
+*.sublime-workspace
