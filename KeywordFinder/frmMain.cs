@@ -15,10 +15,12 @@ namespace KeywordFinder
         private delegate void ListViewAddNewItemCallback(ListViewItem lvi);
         private Process currentProcess;
         private ListViewItem currentItem;
+        private ArgumentBuilder argumentBuilder;
         public frmMain()
         {
             InitializeComponent();
             currentProcess = new Process();
+            argumentBuilder = new ArgumentBuilder();
         }
 
         private void btnBrowse_Click(object sender, EventArgs e)
@@ -32,9 +34,32 @@ namespace KeywordFinder
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
+            argumentBuilder.Clear();
+            argumentBuilder.AppendArgument("/s");
+            if(chkIgnoreUpper.Checked)
+            {
+                argumentBuilder.AppendArgument("/i");
+            }
+            argumentBuilder.AppendArgument("/c:\"" + txtKeyword.Text + "\"");
+            if (rbFile.Checked)
+            {
+                argumentBuilder.AppendArgument("/f:" + txtFile.Text);
+            }
+            else if(rbDirectory.Checked)
+            {
+                if (chkExtension.Checked)
+                {
+                    argumentBuilder.AppendArgument("\"" + txtTargePath.Text + "\\*." + txtExtension.Text + "\"");
+                }
+                else
+                {
+                    argumentBuilder.AppendArgument("\"" + txtTargePath.Text + "\\*.*" + "\"");
+                }
+            }
+
             currentProcess = new Process();
             currentProcess.StartInfo.FileName = "findstr";
-            currentProcess.StartInfo.Arguments = string.Format("/s /i /c:\"{0}\" \"{1}\"{2}", txtKeyword.Text, txtTargePath.Text, chkExtension.Checked ? string.Format("\\*.{0}", txtExtension.Text) : "\\*.*");
+            currentProcess.StartInfo.Arguments = argumentBuilder.ToString();
             currentProcess.StartInfo.UseShellExecute = false;
             currentProcess.StartInfo.CreateNoWindow = true;
             currentProcess.StartInfo.RedirectStandardInput = true;
@@ -140,6 +165,33 @@ namespace KeywordFinder
             notepadProcess.StartInfo.Arguments = currentItem.Text;
             notepadProcess.StartInfo.CreateNoWindow = false;
             notepadProcess.Start();
+        }
+
+        private void rbDirectory_CheckedChanged(object sender, EventArgs e)
+        {
+            txtTargePath.Enabled = true;
+            btnBrowse.Enabled = true;
+            txtFile.Enabled = false;
+            btnChoose.Enabled = false;
+            chkExtension.Enabled = true;
+        }
+
+        private void rbFile_CheckedChanged(object sender, EventArgs e)
+        {
+            txtTargePath.Enabled = false;
+            btnBrowse.Enabled = false;
+            txtFile.Enabled = true;
+            btnChoose.Enabled = true;
+            chkExtension.Enabled = false;
+        }
+
+        private void btnChoose_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                txtFile.Text = dialog.FileName;
+            }
         }
     }
 }
