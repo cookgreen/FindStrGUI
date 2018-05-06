@@ -1,6 +1,6 @@
-# KeywordFinder
+# FindStrGUI
 ## Introduction
-You can find keyword you want in specific directory or a file list 
+Winform GUI shell for findstr command
 
 ## License  
 GNU GPLv3
